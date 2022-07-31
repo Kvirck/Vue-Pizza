@@ -1,17 +1,15 @@
 <template>
   <div class="pizza-block">
     <img class="pizza-block__image" :src="pizza.imageUrl" alt="Pizza" />
-    <div>
-
-    </div>
+    <div></div>
     <h4 class="pizza-block__title">{{ pizza.title }}</h4>
     <div class="pizza-block__selector">
-      <Types :availableTypes="pizza.types" />
-      <Sizes :availableSizes="pizza.sizes" />
+      <Types @activeType="(value) => (activeType = value)" :availableTypes="pizza.types" />
+      <Sizes @activeSize="(value) => (activeSize = value)" :availableSizes="pizza.sizes" />
     </div>
     <div class="pizza-block__bottom">
       <div class="pizza-block__price">от {{ pizza.price }} ₽</div>
-      <div class="button button--outline button--add" @click="handleAddPizza(pizza)">
+      <div class="button button--outline button--add" @click="handleAddPizza">
         <svg
           width="12"
           height="12"
@@ -35,18 +33,27 @@
 import Types from './Types.vue';
 import Sizes from './Sizes.vue';
 import { useStore } from 'vuex';
-import { computed } from '@vue/runtime-core';
+import { computed, ref } from '@vue/runtime-core';
 export default {
   props: ['pizza'],
   components: { Types, Sizes },
   setup(props) {
     const store = useStore();
     const { pizza } = props;
+    const modifiedPizza = ref({ ...pizza });
+    const activeSize = ref();
+    const activeType = ref();
+    delete modifiedPizza.value.sizes;
+    delete modifiedPizza.value.types;
     const pizzaCount = computed(() => store.state.cartItems.get(pizza.id)?.count);
-    const handleAddPizza = (pizza) => {
-      store.commit('ADD_PIZZA_TO_CART', pizza);
+    const handleAddPizza = () => {
+      store.commit('ADD_PIZZA_TO_CART', {
+        ...modifiedPizza.value,
+        size: activeSize.value,
+        type: activeType.value,
+      });
     };
-    return { handleAddPizza, pizzaCount };
+    return { handleAddPizza, pizzaCount, activeSize, activeType };
   },
 };
 </script>

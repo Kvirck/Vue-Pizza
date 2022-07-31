@@ -13,14 +13,19 @@
 
 <script>
 import { ref } from '@vue/reactivity';
+import { onMounted } from '@vue/runtime-core';
 export default {
   props: ['availableSizes'],
-  setup(props) {
+  setup(props, context) {
     const activeItem = ref(props.availableSizes[0]);
     const sizeItems = [26, 30, 40];
     const handleClick = (item) => {
       activeItem.value = item;
+      context.emit('activeSize', item);
     };
+    onMounted(() => {
+      context.emit('activeSize', activeItem.value);
+    });
     return { activeItem, handleClick, sizeItems };
   },
 };

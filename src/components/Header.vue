@@ -5,8 +5,8 @@
         <img width="38" src="../assets/img/pizza-logo.svg" alt="Pizza logo" />
         <div>
           
-          <h1>React Pizza</h1>
-          <p>самая вкусная пицца во вселенной</p>
+          <h1>Vue Pizza</h1>
+          <p>Cамая вкусная пицца во вселенной</p>
         </div>
       </router-link>
       <div class="header__cart">
