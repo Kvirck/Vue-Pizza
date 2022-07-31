@@ -14,7 +14,6 @@ export default createStore({
     getTotalCount: (state) => {
       let tottalCount = 0;
       state.cartItems.forEach((pizza) => (tottalCount += pizza.count));
-      console.log(`state.cartItems`,state.cartItems);
       return tottalCount;
     },
     getTotalPrice(state) {
@@ -53,13 +52,17 @@ export default createStore({
       }
     },
     ADD_PIZZA_TO_CART(state, pizza) {
-      const isAllReadyExists = state.cartItems.get(pizza.id);
+      const isAllReadyExists = state.cartItems.get(JSON.stringify(pizza));
       if (isAllReadyExists) {
-        state.cartItems.set(pizza.id, { ...pizza, count: isAllReadyExists.count + 1 });
+        state.cartItems.set(JSON.stringify(pizza), { ...pizza, count: isAllReadyExists.count + 1 });
       }
       if (!isAllReadyExists) {
-        state.cartItems.set(pizza.id, { ...pizza, count: 1 });
+        state.cartItems.set(JSON.stringify(pizza), { ...pizza, count: 1 });
       }
+    },
+    CART_COUNT_INCREMENT(state, pizza) {
+      const cartItem = state.cartItems.get(pizza.id);
+      console.log(cartItem);
     },
   },
   actions: {
